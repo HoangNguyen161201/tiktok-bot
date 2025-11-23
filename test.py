@@ -1,22 +1,12 @@
-from untils import upload_yt
-import os
-from db import  find_one_ip, get_times
-from datetime import datetime, timedelta
+from untils import overlay_image_on_image
 
-times = get_times()
-data_by_ip = find_one_ip()
-youtubes = data_by_ip['youtubes']
-youtube = youtubes[0]
-now = datetime.now()
-
-
-print(youtube)
-upload_yt(
-    youtube['name'],
-    youtube['user_agent'],
-    youtube['proxy'],
-    '',
-    '',
-    '',
-    os.path.abspath(f"./video/final.mp4"),
+overlay_image_on_image(
+    './public/bg-pr.png',
+    './public/bg-pr.png',
+    './video/pr.png',
+    (7, 6),
+    (328, 443),
+    'dsfdsfsdfv sdssdsd sd sd',
+    200000,
+    100000,
 )

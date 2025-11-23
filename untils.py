@@ -321,9 +321,16 @@ def overlay_image_on_image(bg_path, overlay_path, output_path, position=(50, 50)
                             fill='black', spacing=10)
 
     draw = ImageDraw.Draw(background)
-    font = ImageFont.truetype('./static/Montserrat-SemiBold.ttf', 30.2)
-    x, y = 370, 390
-    wrapped = textwrap.fill('Mua ngay sản phẩm, link trong bio!')
+    font = ImageFont.truetype('./static/Montserrat-SemiBold.ttf', 28)
+    x, y = 370, 355
+    wrapped = textwrap.fill('Mua ngay, link ở phần mô tả kênh')
+    draw.multiline_text((x, y), wrapped, font=font,
+                        fill='red', spacing=10)
+
+    draw = ImageDraw.Draw(background)
+    font = ImageFont.truetype('./static/Montserrat-SemiBold.ttf', 28)
+    x, y = 370, 395
+    wrapped = textwrap.fill('(trang chủ kênh của mình)')
     draw.multiline_text((x, y), wrapped, font=font,
                         fill='red', spacing=10)
 
@@ -514,7 +521,10 @@ def upload_yt( name_yt, user_agent, proxy, title, description, tags, video_path,
                 check_clean_title = True
                 
         time.sleep(1)
-        title_input.send_keys(title)
+        # Copy vào clipboard
+        pyperclip.copy(title)
+        time.sleep(1)
+        title_input.send_keys(Keys.CONTROL, 'v')
         time.sleep(1)
 
         # enter description
@@ -624,16 +634,23 @@ def upload_yt( name_yt, user_agent, proxy, title, description, tags, video_path,
 
         
         
-        try:
-            # Chờ tối đa 100 giây cho button xuất hiện
-            button = WebDriverWait(driver, 100).until(
-                EC.presence_of_element_located((By.ID, "secondary-action-button"))
-            )
-            # Nếu tìm thấy, click
-            button.click()
-            print("Đã click button!")
-        except:
-            # Nếu không tìm thấy sau 100 giây
+        timeout = 60
+        start = time.time()
+        button = None
+
+        while time.time() - start < timeout:
+            try:
+                button = browser.find_element(By.ID, "secondary-action-button")
+                if button:
+                    time.sleep(1)
+                    button.click()
+                    print("Đã click button!")
+                    break
+            except:
+                pass
+            time.sleep(1)
+
+        if not button:
             print("Button không xuất hiện trong 100 giây.")
         
         time.sleep(10)
@@ -720,7 +737,7 @@ def open_chrome_to_edit_detect(name_chrome_yt, user_agent=None, proxy=None):
     driver = get_copy_profile_driver(name_chrome_yt, user_agent, proxy)
     
     # 🧩 Kiểm tra proxy hoặc tác vụ bạn muốn
-    check_proxy(driver['driver'], proxy)
+    # check_proxy(driver['driver'], proxy)
     input("Nhấn Enter để đóng Chrome...")
     driver['driver'].quit()
     
@@ -734,7 +751,7 @@ def check_identity_verification(name_chrome_yt, user_agent, proxy):
     thumb_path = os.path.abspath(f"./public/decorates/decorate1/bg.png"),
     
     try:
-        check_proxy(driver['driver'], proxy)
+        # check_proxy(driver['driver'], proxy)
         driver['driver'].get("https://studio.youtube.com/")
         
         WebDriverWait(driver['driver'], 200).until(EC.url_contains("studio.youtube.com"))
