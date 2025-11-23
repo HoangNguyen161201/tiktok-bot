@@ -27,12 +27,17 @@ import undetected_chromedriver as uc
 
 def download_tiktok_video_n_comment(short_url, folder_video_path, data_path, comment_path, out_path):
     response = requests.get(short_url, allow_redirects=True)
+    print('hoang 1')
+    print(response)
     long_url = response.url
-
+    print('hoang 2')
+    print(long_url)
     os.makedirs(folder_video_path, exist_ok=True)
+    print('hoang 3')
     pyk.save_tiktok(long_url,
                     True,
                     data_path)
+    print('hoang ')
 
     folder = '.'
     mp4_files = [f for f in os.listdir(folder) if f.endswith('.mp4')]
@@ -405,11 +410,11 @@ def get_copy_profile_driver(name_chrome_yt, user_agent=None, proxy=None):
         
     chrome_options.add_argument(f"--user-data-dir={temp_profile_path}")
     chrome_options.add_argument("--profile-directory=Default")
-    chrome_options.add_argument("--disable-quic")
+    # chrome_options.add_argument("--disable-quic")
 
     # 🧩 Proxy (nếu có)
-    if proxy:
-        chrome_options.add_argument(f"--proxy-server={proxy}")
+    # if proxy:
+    #     chrome_options.add_argument(f"--proxy-server={proxy}")
 
     # 🧩 User-Agent (nếu có)
     if user_agent:
@@ -452,7 +457,7 @@ def upload_yt( name_yt, user_agent, proxy, title, description, tags, video_path,
     driver = get_copy_profile_driver(name_yt, user_agent, proxy)
     browser = driver['driver']
     try:
-        check_proxy(browser, proxy)
+        # check_proxy(browser, proxy)
         browser.get("https://studio.youtube.com/")
         
         WebDriverWait(browser, 200).until(EC.url_contains("studio.youtube.com"))
